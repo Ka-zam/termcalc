@@ -25,6 +25,7 @@ c 'sin(pi/2)'        # 1
 c 'hex(255)'         # 0xFF
 c '0xFF & 0b1111'    # 15
 c '4*GiB'            # 4294967296
+c 4 * GiB            # 4294967296
 c                    # interactive mode
 ```
 
