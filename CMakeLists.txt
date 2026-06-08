@@ -77,3 +77,20 @@ target_link_options(c PRIVATE -flto -s)
 
 # Install to ~/.local/bin
 install(TARGETS c DESTINATION $ENV{HOME}/.local/bin)
+
+# Add zsh alias for noglob support (allows unquoted parens and *)
+install(CODE "
+    set(ZSHRC \"\$ENV{HOME}/.zshrc\")
+    set(ZSH_ALIAS \"\\n# termcalc: disable glob expansion\\nalias c='noglob c'\\n\")
+
+    if(EXISTS \"\${ZSHRC}\")
+        file(READ \"\${ZSHRC}\" ZSHRC_CONTENT)
+        string(FIND \"\${ZSHRC_CONTENT}\" \"termcalc\" ZSH_FOUND)
+        if(ZSH_FOUND EQUAL -1)
+            file(APPEND \"\${ZSHRC}\" \"\${ZSH_ALIAS}\")
+            message(STATUS \"Added termcalc alias to ~/.zshrc\")
+        else()
+            message(STATUS \"termcalc already in ~/.zshrc\")
+        endif()
+    endif()
+")

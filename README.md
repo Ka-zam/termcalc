@@ -63,6 +63,10 @@ c                    # interactive mode
 | `ans` | last result |
 | `KiB` `MiB` `GiB` `TiB` | 1024-based |
 | `KB` `MB` `GB` `TB` | 1000-based |
+| `c0` | speed of light, 299792458 m/s |
+| `mu0` | vacuum permeability, 1.2566e-6 H/m |
+| `eps0` | vacuum permittivity, 8.8542e-12 F/m |
+| `eta0` | impedance of free space, 376.73 Ω |
 
 ### Interactive Mode
 - **Up/Down** - history navigation (prefix search if text entered)

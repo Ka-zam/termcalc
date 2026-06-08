@@ -23,6 +23,12 @@
 constexpr double PI = 3.14159265358979323846;
 constexpr double E  = 2.71828182845904523536;
 
+// Physical constants (electromagnetic, SI units)
+constexpr double C0   = 299792458.0;          // speed of light in vacuum, m/s (exact)
+constexpr double MU0  = 1.25663706212e-6;     // vacuum permeability, H/m (CODATA 2018)
+constexpr double EPS0 = 8.8541878128e-12;     // vacuum permittivity, F/m (CODATA 2018)
+constexpr double ETA0 = 376.730313668;        // impedance of free space, ohm (CODATA 2018)
+
 // Byte units (binary)
 constexpr double KiB = 1024.0;
 constexpr double MiB = 1024.0 * 1024.0;
@@ -69,6 +75,12 @@ static double get_var(const char *name) {
     if (strcmp(name, "pi") == 0 || strcmp(name, "PI") == 0) return PI;
     if (strcmp(name, "e") == 0 || strcmp(name, "E") == 0) return E;
     if (strcmp(name, "ans") == 0) return var_count > 0 ? vars[0].value : 0.0;
+
+    // Physical constants (electromagnetic)
+    if (strcmp(name, "c0") == 0) return C0;
+    if (strcmp(name, "mu0") == 0) return MU0;
+    if (strcmp(name, "eps0") == 0) return EPS0;
+    if (strcmp(name, "eta0") == 0) return ETA0;
 
     // Byte units
     if (strcmp(name, "KiB") == 0 || strcmp(name, "kib") == 0) return KiB;
