@@ -48,7 +48,7 @@ c                    # interactive mode
 ### Functions
 | Category | Functions |
 |----------|-----------|
-| Math | `sin` `cos` `tan` `asin` `acos` `atan` `sinh` `cosh` `tanh` `exp` `log` `log10` `log2` `ln` `sqrt` `cbrt` `abs` `floor` `ceil` `round` |
+| Math | `sin` `cos` `tan` `asin` `acos` `atan` `sinh` `cosh` `tanh` `asinh` `acosh` `atanh` `exp` `log` `log10` `log2` `ln` `sqrt` `cbrt` `abs` `floor` `ceil` `round` |
 | Math (2-arg) | `pow(x,y)` `atan2(y,x)` `max(a,b)` `min(a,b)` `mod(a,b)` |
 | Bitwise | `popcount` `clz` `ctz` `bnot` `not8` `not16` `not32` |
 | Bitwise (2-arg) | `bxor(a,b)` `band(a,b)` `bor(a,b)` `shl(x,n)` `shr(x,n)` |

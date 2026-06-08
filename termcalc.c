@@ -287,6 +287,9 @@ static double call_func(const char *name, double arg) {
     if (strcmp(name, "sinh") == 0) return sinh(arg);
     if (strcmp(name, "cosh") == 0) return cosh(arg);
     if (strcmp(name, "tanh") == 0) return tanh(arg);
+    if (strcmp(name, "asinh") == 0) return asinh(arg);
+    if (strcmp(name, "acosh") == 0) return acosh(arg);
+    if (strcmp(name, "atanh") == 0) return atanh(arg);
     if (strcmp(name, "exp") == 0) return exp(arg);
     if (strcmp(name, "log") == 0) return log(arg);
     if (strcmp(name, "log10") == 0) return log10(arg);
@@ -605,6 +608,7 @@ static void repl(void) {
             puts("");
             puts("FUNCTIONS");
             puts("  math:        sin cos tan asin acos atan sinh cosh tanh");
+            puts("               asinh acosh atanh");
             puts("               exp log log10 log2 ln sqrt cbrt abs floor ceil round");
             puts("               pow(x,y) atan2(y,x) max(a,b) min(a,b) mod(a,b)");
             puts("  bitwise:     popcount clz ctz bnot not8 not16 not32");
