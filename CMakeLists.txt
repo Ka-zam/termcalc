@@ -63,6 +63,21 @@ add_executable(c termcalc.c)
 target_include_directories(c PRIVATE ${READLINE_INCLUDE_DIR})
 target_link_libraries(c PRIVATE m ${READLINE_LIBRARY})
 
+include(CTest)
+
+if(BUILD_TESTING)
+    function(add_termcalc_test name expression expected)
+        add_test(NAME ${name} COMMAND c "${expression}")
+        set_tests_properties(${name} PROPERTIES PASS_REGULAR_EXPRESSION "${expected}")
+    endfunction()
+
+    add_termcalc_test(constants_speed_of_light "c0" "299792458")
+    add_termcalc_test(constants_vacuum_impedance "Z0" "376\\.730313")
+    add_termcalc_test(constants_boltzmann "kB" "1\\.380649e-23")
+    add_termcalc_test(constants_photon_energy "h*10e9/eV" "4\\.135667696")
+    add_termcalc_test(constants_quantum_resistance "RK" "25812\\.80745")
+endif()
+
 # Optimize for speed
 target_compile_options(c PRIVATE
     -O3

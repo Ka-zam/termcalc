@@ -23,11 +23,28 @@
 constexpr double PI = 3.14159265358979323846;
 constexpr double E  = 2.71828182845904523536;
 
-// Physical constants (electromagnetic, SI units)
-constexpr double C0   = 299792458.0;          // speed of light in vacuum, m/s (exact)
-constexpr double MU0  = 1.25663706212e-6;     // vacuum permeability, H/m (CODATA 2018)
-constexpr double EPS0 = 8.8541878128e-12;     // vacuum permittivity, F/m (CODATA 2018)
-constexpr double ETA0 = 376.730313668;        // impedance of free space, ohm (CODATA 2018)
+// Physical constants (SI units, CODATA 2022)
+// Values marked exact define SI units; the others are recommended central values.
+constexpr double C0       = 299792458.0;          // speed of light in vacuum, m/s (exact)
+constexpr double MU0      = 1.25663706127e-6;     // vacuum permeability, H/m
+constexpr double EPS0     = 8.8541878188e-12;     // vacuum permittivity, F/m
+constexpr double Z0       = MU0 * C0;             // characteristic impedance of vacuum, ohm
+constexpr double Y0       = 1.0 / Z0;             // characteristic admittance of vacuum, S
+constexpr double KE       = 1.0 / (4.0 * PI * EPS0); // Coulomb constant, N m^2/C^2
+
+constexpr double QE       = 1.602176634e-19;      // elementary charge, C (exact)
+constexpr double H_PLANCK = 6.62607015e-34;       // Planck constant, J s (exact)
+constexpr double HBAR     = H_PLANCK / (2.0 * PI); // reduced Planck constant, J s (exact)
+constexpr double KBOLTZ   = 1.380649e-23;         // Boltzmann constant, J/K (exact)
+constexpr double ME       = 9.1093837139e-31;     // electron mass, kg
+constexpr double ALPHA    = 7.2973525643e-3;      // fine-structure constant
+constexpr double EV       = QE;                   // electron volt, J (exact)
+
+// Electrical metrology constants (exact in the SI)
+constexpr double PHI0 = H_PLANCK / (2.0 * QE);    // magnetic flux quantum, Wb
+constexpr double G0   = 2.0 * QE * QE / H_PLANCK; // conductance quantum, S
+constexpr double RK   = H_PLANCK / (QE * QE);     // von Klitzing constant, ohm
+constexpr double KJ   = 2.0 * QE / H_PLANCK;      // Josephson constant, Hz/V
 
 // Byte units (binary)
 constexpr double KiB = 1024.0;
@@ -76,11 +93,29 @@ static double get_var(const char *name) {
     if (strcmp(name, "e") == 0 || strcmp(name, "E") == 0) return E;
     if (strcmp(name, "ans") == 0) return var_count > 0 ? vars[0].value : 0.0;
 
-    // Physical constants (electromagnetic)
+    // Vacuum and electromagnetic constants
     if (strcmp(name, "c0") == 0) return C0;
     if (strcmp(name, "mu0") == 0) return MU0;
     if (strcmp(name, "eps0") == 0) return EPS0;
-    if (strcmp(name, "eta0") == 0) return ETA0;
+    if (strcmp(name, "eta0") == 0 || strcmp(name, "Z0") == 0 ||
+        strcmp(name, "z0") == 0) return Z0;
+    if (strcmp(name, "Y0") == 0 || strcmp(name, "y0") == 0) return Y0;
+    if (strcmp(name, "ke") == 0) return KE;
+
+    // Quantum and thermal constants used in electronics
+    if (strcmp(name, "qe") == 0) return QE;
+    if (strcmp(name, "h") == 0) return H_PLANCK;
+    if (strcmp(name, "hbar") == 0) return HBAR;
+    if (strcmp(name, "kB") == 0 || strcmp(name, "kboltz") == 0) return KBOLTZ;
+    if (strcmp(name, "me") == 0) return ME;
+    if (strcmp(name, "alpha") == 0) return ALPHA;
+    if (strcmp(name, "eV") == 0 || strcmp(name, "ev") == 0) return EV;
+
+    // Electrical metrology constants
+    if (strcmp(name, "phi0") == 0) return PHI0;
+    if (strcmp(name, "G0") == 0 || strcmp(name, "g0") == 0) return G0;
+    if (strcmp(name, "RK") == 0 || strcmp(name, "rk") == 0) return RK;
+    if (strcmp(name, "KJ") == 0 || strcmp(name, "kj") == 0) return KJ;
 
     // Byte units
     if (strcmp(name, "KiB") == 0 || strcmp(name, "kib") == 0) return KiB;
@@ -620,6 +655,9 @@ static void repl(void) {
             puts("  pi e ans");
             puts("  KiB MiB GiB TiB  (1024-based)");
             puts("  KB MB GB TB     (1000-based)");
+            puts("  vacuum:      c0 mu0 eps0 eta0/Z0 Y0 ke");
+            puts("  electronics: qe h hbar kB eV me alpha");
+            puts("  metrology:   phi0 G0 RK KJ");
             puts("");
             puts("EXAMPLES");
             puts("  0xFF & 0b1111        -> 15");

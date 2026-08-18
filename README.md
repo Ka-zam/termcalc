@@ -26,6 +26,8 @@ c 'hex(255)'         # 0xFF
 c '0xFF & 0b1111'    # 15
 c '4*GiB'            # 4294967296
 c 4 * GiB            # 4294967296
+c 'c0/2.45e9'        # 0.122364... m, free-space wavelength at 2.45 GHz
+c 'sqrt(mu0/eps0)'   # 376.730... ohm, free-space impedance
 c                    # interactive mode
 ```
 
@@ -56,17 +58,23 @@ c                    # interactive mode
 | Bytes | `toKiB` `toMiB` `toGiB` `toTiB` `toKB` `toMB` `toGB` `toTB` |
 
 ### Constants
-| Constant | Value |
-|----------|-------|
-| `pi` | 3.14159... |
-| `e` | 2.71828... |
-| `ans` | last result |
-| `KiB` `MiB` `GiB` `TiB` | 1024-based |
-| `KB` `MB` `GB` `TB` | 1000-based |
-| `c0` | speed of light, 299792458 m/s |
-| `mu0` | vacuum permeability, 1.2566e-6 H/m |
-| `eps0` | vacuum permittivity, 8.8542e-12 F/m |
-| `eta0` | impedance of free space, 376.73 Ω |
+
+Physical constants use SI units and the [CODATA 2022 recommended
+values](https://physics.nist.gov/cuu/Constants/). Exact values and constants derived
+only from exact values are retained to `double` precision.
+
+| Area | Constants |
+|------|-----------|
+| Math/state | `pi` (pi), `e` (Euler's number), `ans` (last result) |
+| Vacuum / RF | `c0` (m/s), `mu0` (H/m), `eps0` (F/m), `eta0` or `Z0` (Ω), `Y0` (S), `ke` (N·m²/C²) |
+| Electronics / thermal | `qe` (C), `h` (J·s), `hbar` (J·s), `kB` or `kboltz` (J/K), `eV` (J), `me` (kg), `alpha` (dimensionless) |
+| Electrical metrology | `phi0` (Wb), `G0` (S), `RK` (Ω), `KJ` (Hz/V) |
+| Binary bytes | `KiB` `MiB` `GiB` `TiB` (1024-based) |
+| Decimal bytes | `KB` `MB` `GB` `TB` (1000-based) |
+
+Names are case-sensitive where needed: `e` is Euler's number, `qe` is the
+elementary charge, `kB` is the Boltzmann constant, and `kb` is a decimal
+kilobyte.
 
 ### Interactive Mode
 - **Up/Down** - history navigation (prefix search if text entered)
@@ -85,4 +93,8 @@ c 'not8(0xF0)'           # 15
 c '4*GiB'                # 4294967296
 c 'toMiB(4*GiB)'         # 4096
 c 'popcount(0xFF)'       # 8
+c 'c0/5.8e9'             # 0.0516883548276 (free-space wavelength, m)
+c 'kB*290'               # 4.0038821e-21 (thermal noise density, W/Hz)
+c 'h*10e9/eV'            # 4.13566769692e-05 (10 GHz photon energy, eV)
+c '1/(2*pi*50*1e-12)'    # 3183098861.84 (50-ohm RC corner, Hz)
 ```
