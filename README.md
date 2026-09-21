@@ -36,7 +36,7 @@ c                    # interactive mode
 ### Operators
 | Type | Operators |
 |------|-----------|
-| Arithmetic | `+` `-` `*` `/` `%` `^` `**` |
+| Arithmetic | `+` `-` `*` `/` `//` `%` `^` `**` |
 | Bitwise | `&` `\|` `~` `<<` `>>` |
 
 ### Number Formats
@@ -51,7 +51,8 @@ c                    # interactive mode
 | Category | Functions |
 |----------|-----------|
 | Math | `sin` `cos` `tan` `asin` `acos` `atan` `sinh` `cosh` `tanh` `asinh` `acosh` `atanh` `exp` `log` `log10` `log2` `ln` `sqrt` `cbrt` `abs` `floor` `ceil` `round` |
-| Math (2-arg) | `pow(x,y)` `atan2(y,x)` `max(a,b)` `min(a,b)` `mod(a,b)` |
+| Math (2-arg) | `pow(x,y)` `atan2(y,x)` `max(a,b)` `min(a,b)` |
+| Division | `//` and `div(a,b)` floored quotient, `mod(a,b)` floored remainder (sign of divisor), `%` and `rem(a,b)` truncated remainder (sign of dividend) |
 | Degrees | `sind` `cosd` `tand` `asind` `acosd` `atand` `atan2d(y,x)` `deg(rad)` `rad(deg)` |
 | Bitwise | `popcount` `clz` `ctz` `bnot` `not8` `not16` `not32` |
 | Bitwise (2-arg) | `bxor(a,b)` `band(a,b)` `bor(a,b)` `shl(x,n)` `shr(x,n)` |

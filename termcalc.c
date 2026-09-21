@@ -253,9 +253,17 @@ static void next_token(Parser *p) {
     switch (c) {
         case '(': p->cur = (Token){.type = TOK_LPAREN}; return;
         case ')': p->cur = (Token){.type = TOK_RPAREN}; return;
-        case '+': case '-': case '/': case '%': case '=':
+        case '+': case '-': case '%': case '=':
         case '&': case '|': case '~': case ',':
             p->cur = (Token){.type = TOK_OP, .op = c};
+            return;
+        case '/':
+            if (*p->pos == '/') {
+                ++p->pos;
+                p->cur = (Token){.type = TOK_OP, .op = 'F'};  // F for floor division
+            } else {
+                p->cur = (Token){.type = TOK_OP, .op = '/'};
+            }
             return;
         case '<':
             if (*p->pos == '<') {
@@ -329,7 +337,11 @@ static double call_func2(const char *name, double arg1, double arg2) {
     if (strcmp(name, "shl") == 0) return (double)((uint64_t)arg1 << (int)arg2);
     if (strcmp(name, "shr") == 0) return (double)((uint64_t)arg1 >> (int)arg2);
     if (strcmp(name, "pow") == 0) return pow(arg1, arg2);
-    if (strcmp(name, "mod") == 0) return fmod(arg1, arg2);
+    // mod is the floored modulo, so it pairs with // and takes the sign of the
+    // divisor; rem is C's truncated remainder and pairs with %.
+    if (strcmp(name, "mod") == 0) return arg1 - arg2 * floor(arg1 / arg2);
+    if (strcmp(name, "rem") == 0) return fmod(arg1, arg2);
+    if (strcmp(name, "div") == 0) return floor(arg1 / arg2);
     if (strcmp(name, "atan2") == 0) return atan2(arg1, arg2);
     if (strcmp(name, "atan2d") == 0) return rad_to_deg(atan2(arg1, arg2));
     if (strcmp(name, "max") == 0) return fmax(arg1, arg2);
@@ -479,17 +491,18 @@ static double parse_power(Parser *p) {
     return left;
 }
 
-// term: power ((*|/|%) power)*
+// term: power ((*|/|//|%) power)*
 static double parse_term(Parser *p) {
     double left = parse_power(p);
     while (p->cur.type == TOK_OP &&
-           (p->cur.op == '*' || p->cur.op == '/' || p->cur.op == '%')) {
+           (p->cur.op == '*' || p->cur.op == '/' || p->cur.op == 'F' || p->cur.op == '%')) {
         char op = p->cur.op;
         next_token(p);
         double right = parse_power(p);
         switch (op) {
             case '*': left *= right; break;
             case '/': left /= right; break;
+            case 'F': left = floor(left / right); break;
             case '%': left = fmod(left, right); break;
         }
     }
@@ -669,7 +682,7 @@ static void repl(void) {
             puts("termcalc - fast terminal calculator");
             puts("");
             puts("OPERATORS");
-            puts("  arithmetic:  + - * / % ^ **");
+            puts("  arithmetic:  + - * / // % ^ **");
             puts("  bitwise:     & | ~ << >>");
             puts("");
             puts("NUMBERS");
@@ -682,7 +695,9 @@ static void repl(void) {
             puts("  math:        sin cos tan asin acos atan sinh cosh tanh");
             puts("               asinh acosh atanh");
             puts("               exp log log10 log2 ln sqrt cbrt abs floor ceil round");
-            puts("               pow(x,y) atan2(y,x) max(a,b) min(a,b) mod(a,b)");
+            puts("               pow(x,y) atan2(y,x) max(a,b) min(a,b)");
+            puts("               div(a,b) mod(a,b) floored, like //");
+            puts("               rem(a,b) truncated, like %");
             puts("  degrees:     sind cosd tand asind acosd atand atan2d(y,x)");
             puts("               deg(rad) rad(deg)");
             puts("  bitwise:     popcount clz ctz bnot not8 not16 not32");
