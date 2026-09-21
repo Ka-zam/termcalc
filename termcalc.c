@@ -295,6 +295,32 @@ static void next_token(Parser *p) {
 
 static double parse_expr(Parser *p);
 
+// Degree trig helpers. Arguments are reduced mod 360 so that the quadrant
+// boundaries come out exact: sind(180) is 0, not 1.2e-16.
+static double deg_to_rad(double deg) { return deg * (PI / 180.0); }
+static double rad_to_deg(double rad) { return rad * (180.0 / PI); }
+
+static double sin_deg(double deg) {
+    if (!isfinite(deg)) return NAN;
+    double q = fmod(deg, 360.0);
+    if (q < 0) q += 360.0;
+    if (q == 0.0 || q == 180.0) return 0.0;
+    if (q == 90.0) return 1.0;
+    if (q == 270.0) return -1.0;
+    return sin(deg_to_rad(q));
+}
+
+static double cos_deg(double deg) {
+    return sin_deg(deg + 90.0);
+}
+
+static double tan_deg(double deg) {
+    double s = sin_deg(deg);
+    double c = cos_deg(deg);
+    if (c == 0.0) return s > 0 ? INFINITY : -INFINITY;
+    return s / c;
+}
+
 // Two-argument functions
 static double call_func2(const char *name, double arg1, double arg2) {
     if (strcmp(name, "bxor") == 0) return (double)((uint64_t)arg1 ^ (uint64_t)arg2);
@@ -305,6 +331,7 @@ static double call_func2(const char *name, double arg1, double arg2) {
     if (strcmp(name, "pow") == 0) return pow(arg1, arg2);
     if (strcmp(name, "mod") == 0) return fmod(arg1, arg2);
     if (strcmp(name, "atan2") == 0) return atan2(arg1, arg2);
+    if (strcmp(name, "atan2d") == 0) return rad_to_deg(atan2(arg1, arg2));
     if (strcmp(name, "max") == 0) return fmax(arg1, arg2);
     if (strcmp(name, "min") == 0) return fmin(arg1, arg2);
     return NAN;
@@ -325,6 +352,16 @@ static double call_func(const char *name, double arg) {
     if (strcmp(name, "asinh") == 0) return asinh(arg);
     if (strcmp(name, "acosh") == 0) return acosh(arg);
     if (strcmp(name, "atanh") == 0) return atanh(arg);
+
+    // Degree variants of the trig functions
+    if (strcmp(name, "sind") == 0) return sin_deg(arg);
+    if (strcmp(name, "cosd") == 0) return cos_deg(arg);
+    if (strcmp(name, "tand") == 0) return tan_deg(arg);
+    if (strcmp(name, "asind") == 0) return rad_to_deg(asin(arg));
+    if (strcmp(name, "acosd") == 0) return rad_to_deg(acos(arg));
+    if (strcmp(name, "atand") == 0) return rad_to_deg(atan(arg));
+    if (strcmp(name, "deg") == 0) return rad_to_deg(arg);
+    if (strcmp(name, "rad") == 0) return deg_to_rad(arg);
     if (strcmp(name, "exp") == 0) return exp(arg);
     if (strcmp(name, "log") == 0) return log(arg);
     if (strcmp(name, "log10") == 0) return log10(arg);
@@ -646,6 +683,8 @@ static void repl(void) {
             puts("               asinh acosh atanh");
             puts("               exp log log10 log2 ln sqrt cbrt abs floor ceil round");
             puts("               pow(x,y) atan2(y,x) max(a,b) min(a,b) mod(a,b)");
+            puts("  degrees:     sind cosd tand asind acosd atand atan2d(y,x)");
+            puts("               deg(rad) rad(deg)");
             puts("  bitwise:     popcount clz ctz bnot not8 not16 not32");
             puts("               bxor(a,b) band(a,b) bor(a,b) shl(x,n) shr(x,n)");
             puts("  format:      hex() bin() oct() dec()");
